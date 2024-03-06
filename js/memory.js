@@ -21,15 +21,24 @@ export var game = function(){
     var lastCard;
     var pairs = 2;
     var points = 100;
-
+    
     return {
         init: function (call){
-            var items = resources.slice(); // Copiem l'array
-            items.sort(() => Math.random() - 0.5); // Aleatòria
-            items = items.slice(0, pairs); // Agafem els primers
+            var carta_array = [];
+            var items = resources.slice(); // Copy the array
+            items.sort(() => Math.random() - 0.5); // Randomize
+            items = items.slice(0, pairs); // Take the first 'pairs' elements
             items = items.concat(items);
-            items.sort(() => Math.random() - 0.5); // Aleatòria
-            return items.map(item => Object.create(card, {front: {value:item}, callback: {value:call}}));
+            items.sort(() => Math.random() - 0.5); // Randomize again
+            
+            return items.map(item => {
+                let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
+                carta.current = carta.front;
+                carta.clickable = false;
+                carta_array.push(carta);
+                carta.goBack();
+                return carta;
+            });
         },
         click: function (card){
             if (!card.clickable) return;
