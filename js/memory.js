@@ -21,7 +21,7 @@ export var game = function(){
     var lastCard;
     var pairs = 2;
     var points = 100;
-    
+
     return {
         init: function (call){
             var carta_array = [];

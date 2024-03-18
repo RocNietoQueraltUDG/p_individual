@@ -7,6 +7,7 @@ addEventListener('load', function() {
     document.getElementById('options').addEventListener('click', 
     function(){
         window.location.assign("./html/options.html");
+        window.location.href="./html/options.html";
     });
 
     document.getElementById('saves').addEventListener('click', 
