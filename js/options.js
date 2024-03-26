@@ -6,6 +6,13 @@ var options = function(){
     
     var pairs = $('#pairs');
     var difficulty = $('#dif');
+    var pointsLost = {
+    easy: 10,
+    normal: 25,
+    hard: 50
+};
+
+var options = JSON.parse(localStorage.options || JSON.stringify(default_options));
 
     var options = JSON.parse(localStorage.options || JSON.stringify(default_options));
     pairs.val(options.pairs);
@@ -15,15 +22,16 @@ var options = function(){
 
     return {
         applyChanges: function(){
-            localStorage.options = JSON.stringify(options);
+            localStorage.setItem('options', JSON.stringify(options)); // Canvia localStorage.options per localStorage.setItem('options', ...)
         },
         defaultValues: function(){
             options.pairs = default_options.pairs;
             options.difficulty = default_options.difficulty;
             pairs.val(options.pairs);
             difficulty.val(options.difficulty);
+            this.applyChanges(); // Afegeix aquesta línia per guardar els valors per defecte a localStorage
         },
-        getOptions: function() {  // Add this function to retrieve options
+        getOptions: function() {  
             return options;
         }
     }
