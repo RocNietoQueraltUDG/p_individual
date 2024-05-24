@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $('#play').click(function() {
+        sessionStorage.load = false;
         window.location.assign("./html/game.html");
     });
 
@@ -8,7 +9,8 @@ $(document).ready(function() {
     });
 
     $('#saves').click(function() {
-        console.error("Opció no implementada");
+        sessionStorage.load = true;
+        window.location.assign("./html/game.html");
     });
 
     $('#exit').click(function() {

@@ -11,10 +11,19 @@ export var game = function(){
                 this.callback();
             }, this.exposureTime); // Use this.exposureTime for the exposure time
         },
-        goFront: function (){
+        goFront: function (last){
+            if (last)
+                this.waiting = last.waiting = false;
+            else
+                this.waiting = true;
             this.current = this.front;
             this.clickable = false;
             this.callback();
+        },
+        check: function(other){
+            if (this.front === other.front)
+                this.isDone = other.isDone = true;
+            return this.isDone;
         }
     };
 
@@ -37,25 +46,39 @@ export var game = function(){
     };
     var difficulty = options.difficulty || 'normal';
     var { exposureTime, pointsEarned, pointsLost } = difficultySettings[difficulty];
+    var cards = [];
+    var mix = function(){
+        var items = resources.slice(); // Copy the array
+        items.sort(() => Math.random() - 0.5); // Randomize
+        items = items.slice(0, pairs); // Use the selected number of pairs
+        items = items.concat(items);
+        items.sort(() => Math.random() - 0.5); // Randomize again
+        card.exposureTime = exposureTime; // Assign the exposure time to the card
+        return items;
 
+    }
     return {
         init: function (call){
-            var carta_array = [];
-            var items = resources.slice(); // Copy the array
-            items.sort(() => Math.random() - 0.5); // Randomize
-            items = items.slice(0, pairs); // Use the selected number of pairs
-            items = items.concat(items);
-            items.sort(() => Math.random() - 0.5); // Randomize again
-            
-            card.exposureTime = exposureTime; // Assign the exposure time to the card
-            
-            return items.map(item => {
-                let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
-                carta.current = carta.front;
-                carta.clickable = false;
-                carta_array.push(carta);
-                carta.goBack();
-                return carta;
+            if(sessionStorage.load && localStorage.save){
+                let partida =JSON.parse(localStorage.save);
+                pairs=partida.pairs;
+                pints = partida.points;
+                partida.cards.map(item=>{
+                    let it = Object.create(card);
+                    it.front = item.front;
+                    it.current = item.current;
+                    it.isDone = item.isDone;
+                    it.waiting = item.waiting;
+                    it.callback = call;
+                    cards.push(it)
+                    if (it.current != back && !it.waiting && !it.isDone) it.goBack();
+                    else if (it.waiting) lastCard = it;
+                });
+                return cards
+            }
+            else return mix().map(item => {
+                cards.push(Object.create(card,{ front: { value: item }, callback: { value: call } }));
+                return cards[cards.length-1];
             });
         },
         click: function (card){
@@ -84,6 +107,22 @@ export var game = function(){
         },
         getOptions: function() { // Add this function to get game options
             return options;
+        },
+        save: function() {
+            var partida = {
+                pairs: pairs,
+                points: points,
+                cards: []
+            };
+            cards.forEach(c=>{
+                partida.cards.push({
+                    current: c.current,
+                    front: c.front,
+                    isDone: c.isDone,
+                    waiting: c.waiting
+                });
+            });
+            localStorage.save = JSON.stringify(partida);
         }
     }
 }();
