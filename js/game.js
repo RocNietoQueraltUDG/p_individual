@@ -1,16 +1,15 @@
-import { game as gController } from "./memory.js";
+import { game as gController } from './memory.js';
 
-var game = $('#game');
+$(document).ready(function() {
+    $('#save').on('click', () => gController.save());
+    $('#saveServer').on('click', () => gController.saveToServer());
+    $('#loadServer').on('click', () => gController.loadFromServer(updateSRC));
 
-$('#save').on('click',()=>gController.save());
+    // Funció per actualitzar el SRC de les imatges
+    function updateSRC() {
+        // Implementació per actualitzar el SRC de les imatges de les cartes
+    }
 
-gController.init(updateSRC).forEach(function(card, indx){
-    game.append('<img id="c'+indx+'" class="card" title="card">');
-    card.pointer = $('#c'+indx);
-    card.pointer.on('click', () => gController.click(card));
-    card.pointer.attr("src", card.current);
+    // Inicialització del joc
+    gController.init(updateSRC);
 });
-
-function updateSRC(){
-    this.pointer.attr("src", this.current);
-}
