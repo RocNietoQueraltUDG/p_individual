@@ -1,17 +1,15 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
-<head>
-    <title>Memory Game</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="jquery.min.js"></script>
-    <script type="module" src="game.js"></script>
-</head>
-<body>
-    <div id="gameBoard">
-        <!-- Aquí anirà el contingut del joc -->
-    </div>
-    <button id="save">Guardar en Local</button>
-    <button id="saveServer">Guardar al Servidor</button>
-    <button id="loadServer">Carregar del Servidor</button>
-</body>
+	<head>
+        <script src="../library/jquery.min.js"></script>
+        <script src="../js/game.js" type="module"></script>
+		<link rel="stylesheet" 
+			href="../styles/game.css">
+		<title> Memory - Pantalla </title>
+	</head>
+	<body>
+		<h1>Partida</h1>
+        <div id="game"></div>
+        <button id="save">Guardar</button>
+	</body>
 </html>

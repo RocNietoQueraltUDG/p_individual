@@ -9,26 +9,17 @@ export var game = function(){
                 this.current = back;
                 this.clickable = true;
                 this.callback();
-            }, this.exposureTime); // Use this.exposureTime for the exposure time
+            }, this.exposureTime); 
         },
-        goFront: function (last){
-            if (last)
-                this.waiting = last.waiting = false;
-            else
-                this.waiting = true;
+        goFront: function (){
             this.current = this.front;
             this.clickable = false;
             this.callback();
-        },
-        check: function(other){
-            if (this.front === other.front)
-                this.isDone = other.isDone = true;
-            return this.isDone;
         }
     };
 
     var lastCard;
-    var options = JSON.parse(localStorage.getItem('options')); // Read options from localStorage
+    var options = JSON.parse(localStorage.getItem('options')); 
 
     if (!options) {
         options = {
@@ -37,32 +28,34 @@ export var game = function(){
         };
     }
 
-    var pairs = options.pairs || 2; // Use saved options or default value if nothing is in localStorage
+    var pairs = options.pairs || 2; 
     var points = 100;
     var difficultySettings = {
-        easy: { exposureTime: 2000, pointsEarned: 50, pointsLost: 10 }, // Adjust exposure times, points earned, and points lost based on difficulty
+        easy: { exposureTime: 2000, pointsEarned: 50, pointsLost: 10 }, 
         normal: { exposureTime: 1000, pointsEarned: 100, pointsLost: 25 },
         hard: { exposureTime: 500, pointsEarned: 150, pointsLost: 50 }
     };
+  
     var difficulty = options.difficulty || 'normal';
     var { exposureTime, pointsEarned, pointsLost } = difficultySettings[difficulty];
     var cards = [];
     var mix = function(){
-        var items = resources.slice(); // Copy the array
-        items.sort(() => Math.random() - 0.5); // Randomize
-        items = items.slice(0, pairs); // Use the selected number of pairs
+        var items = resources.slice(); 
+        items.sort(() => Math.random() - 0.5); 
+        items = items.slice(0, pairs); 
         items = items.concat(items);
-        items.sort(() => Math.random() - 0.5); // Randomize again
-        card.exposureTime = exposureTime; // Assign the exposure time to the card
         return items;
-
     }
     return {
         init: function (call){
-            if(sessionStorage.load && localStorage.save){
-                let partida =JSON.parse(localStorage.save);
-                pairs=partida.pairs;
-                pints = partida.points;
+            alert ("Function call");
+            alert (sessionStorage.load);
+            alert (localStorage.load);
+            if (sessionStorage.load && localStorage.save){ //load game
+                alert ("Loading Game");
+                let partida = JSON.parse(localStorage.save);
+                pairs = partida.pairs;
+                points = partida.points;
                 partida.cards.map(item=>{
                     let it = Object.create(card);
                     it.front = item.front;
@@ -70,32 +63,40 @@ export var game = function(){
                     it.isDone = item.isDone;
                     it.waiting = item.waiting;
                     it.callback = call;
-                    cards.push(it)
-                    if (it.current != back && !it.waiting && !it.isDone) it.goBack();
+                    cards.push(it);
+                    if (it. current != back && !it.waiting && !it.isDone) it.goBack();
                     else if (it.waiting) lastCard = it;
                 });
                 return cards
             }
-            else return mix().map(item => {
-                cards.push(Object.create(card,{ front: { value: item }, callback: { value: call } }));
-                return cards[cards.length-1];
-            });
+            else{
+            alert ("New Game");
+            return mix().map(item => { // new game
+                let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
+                carta.exposureTime = exposureTime; 
+                carta.current = carta.front;
+                carta.clickable = false;
+                carta.goBack();
+                cards.push(carta);
+                return carta;
+              })
+            };
         },
         click: function (card){
             if (!card.clickable) return;
             card.goFront();
-            if (lastCard){ // Second card
+            if (lastCard){ 
                 if (card.front === lastCard.front){
                     pairs--;
                     if (pairs <= 0){
                         alert("Has guanyat amb " + points + " punts!");
                         window.location.replace("../");
                     }
-                    points += pointsEarned; // Add pointsEarned for a correct match
+                    points += pointsEarned; 
                 }
                 else{
                     [card, lastCard].forEach(c=>c.goBack());
-                    points -= pointsLost; // Subtract pointsLost for a wrong match
+                    points -= pointsLost; 
                     if (points <= 0){
                         alert ("Has perdut");
                         window.location.replace("../");
@@ -103,13 +104,13 @@ export var game = function(){
                 }
                 lastCard = null;
             }
-            else lastCard = card; // First card
+            else lastCard = card; 
         },
-        getOptions: function() { // Add this function to get game options
+        getOptions: function() { 
             return options;
         },
-        save: function() {
-            var partida = {
+        save: function (){
+            var partida= {
                 pairs: pairs,
                 points: points,
                 cards: []
@@ -121,74 +122,8 @@ export var game = function(){
                     isDone: c.isDone,
                     waiting: c.waiting
                 });
-            });
+            })
             localStorage.save = JSON.stringify(partida);
-        },
-        saveToServer: function() {
-            var uuid = localStorage.getItem('uuid');
-            if (!uuid) {
-                uuid = random_uuid();
-                localStorage.setItem('uuid', uuid);
-            }
-
-            var partida = {
-                uuid: uuid,
-                gameData: {
-                    pairs: pairs,
-                    points: points,
-                    cards: cards.map(c => ({
-                        current: c.current,
-                        front: c.front,
-                        isDone: c.isDone,
-                        waiting: c.waiting
-                    }))
-                }
-            };
-
-            fetch('save_game.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(partida)
-            }).then(response => response.text()).then(data => {
-                console.log(data);
-            }).catch((error) => {
-                console.error('Error:', error);
-            });
-        },
-        loadFromServer: function(callback) {
-            var uuid = localStorage.getItem('uuid');
-            if (!uuid) {
-                alert("No hi ha partida guardada.");
-                return;
-            }
-
-            fetch('load_game.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ uuid: uuid })
-            }).then(response => response.json()).then(data => {
-                // Carregar la partida des del servidor
-                pairs = data.pairs;
-                points = data.points;
-                cards = data.cards.map(item => {
-                    let it = Object.create(card);
-                    it.front = item.front;
-                    it.current = item.current;
-                    it.isDone = item.isDone;
-                    it.waiting = item.waiting;
-                    it.callback = callback;
-                    return it;
-                });
-                callback();
-            }).catch((error) => {
-                console.error('Error:', error);
-            });
         }
     }
 }();
-    
-
