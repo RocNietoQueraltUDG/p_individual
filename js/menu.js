@@ -1,7 +1,6 @@
 $(document).ready(function() {
     $('#play').click(function() {
         sessionStorage.load = false;
-        alert ("sessionStorage.load = false");
         window.location.assign("./html/game.html");
     });
 
@@ -11,7 +10,6 @@ $(document).ready(function() {
 
     $('#saves').click(function() {
         sessionStorage.load = true;
-        alert ("sessionStorage.load = true");
         window.location.assign("./html/game.html");
     });
 

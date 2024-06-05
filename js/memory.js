@@ -4,6 +4,7 @@ export var game = function(){
     const card = {
         current: back,
         clickable: true,
+        isDone: false,
         goBack: function (){
             setTimeout(() => {
                 this.current = back;
@@ -11,10 +12,19 @@ export var game = function(){
                 this.callback();
             }, this.exposureTime); 
         },
-        goFront: function (){
+        goFront: function (last){
+            if (last)
+                this.waiting = last.waiting = false;
+            else
+                this.waiting = true;
             this.current = this.front;
             this.clickable = false;
             this.callback();
+        },
+        check: function(other){
+            if (this.front === other.front)
+                this.isDone = other.isDone = true;
+            return this.isDone;
         }
     };
 
@@ -38,7 +48,7 @@ export var game = function(){
   
     var difficulty = options.difficulty || 'normal';
     var { exposureTime, pointsEarned, pointsLost } = difficultySettings[difficulty];
-    var cards = [];
+    var cards = []; //Llistat de cartes
     var mix = function(){
         var items = resources.slice(); 
         items.sort(() => Math.random() - 0.5); 
@@ -48,41 +58,41 @@ export var game = function(){
     }
     return {
         init: function (call){
-            alert ("Function call");
-            alert (sessionStorage.load);
-            alert (localStorage.load);
-            if (sessionStorage.load && localStorage.save){ //load game
-                alert ("Loading Game");
+            if (sessionStorage.load === "true" && localStorage.save) { // load game
+                alert("Loading Game");
                 let partida = JSON.parse(localStorage.save);
                 pairs = partida.pairs;
                 points = partida.points;
-                partida.cards.map(item=>{
+                partida.cards.map(item => {
                     let it = Object.create(card);
                     it.front = item.front;
                     it.current = item.current;
                     it.isDone = item.isDone;
                     it.waiting = item.waiting;
                     it.callback = call;
-                    cards.push(it);
-                    if (it. current != back && !it.waiting && !it.isDone) it.goBack();
-                    else if (it.waiting) lastCard = it;
+                    if (it.isDone) {  // Check isDone before setting clickable
+                        it.clickable = false; // Set clickable to false for done cards
+                    } else if (it.current != back && !it.waiting && !it.isDone) {
+                        it.goBack();
+                    } else if (it.waiting) lastCard = it;
+                        cards.push(it);
                 });
-                return cards
+                return cards;
+            } else { // new game
+                alert("New Game");
+                return mix().map(item => {
+                    let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
+                    carta.exposureTime = exposureTime; 
+                    carta.current = carta.front;
+                    carta.goBack();
+                    carta.clickable = true;
+                    cards.push(carta);
+                    return carta;
+                });
             }
-            else{
-            alert ("New Game");
-            return mix().map(item => { // new game
-                let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
-                carta.exposureTime = exposureTime; 
-                carta.current = carta.front;
-                carta.clickable = false;
-                carta.goBack();
-                cards.push(carta);
-                return carta;
-              })
-            };
         },
         click: function (card){
+            alert(card.clickable)
             if (!card.clickable) return;
             card.goFront();
             if (lastCard){ 
@@ -93,6 +103,9 @@ export var game = function(){
                         window.location.replace("../");
                     }
                     points += pointsEarned; 
+                    card.isDone = true;
+                    lastCard.isDone = true;
+                    lastCard = null;
                 }
                 else{
                     [card, lastCard].forEach(c=>c.goBack());
@@ -101,10 +114,11 @@ export var game = function(){
                         alert ("Has perdut");
                         window.location.replace("../");
                     }
+                    lastCard = null;
                 }
-                lastCard = null;
             }
-            else lastCard = card; 
+            else lastCard = card;
+             
         },
         getOptions: function() { 
             return options;
@@ -116,13 +130,14 @@ export var game = function(){
                 cards: []
             };
             cards.forEach(c=>{
+                console.log("Saving card isDone:", c.isDone)
                 partida.cards.push({
                     current: c.current,
                     front: c.front,
                     isDone: c.isDone,
                     waiting: c.waiting
                 });
-            })
+            });
             localStorage.save = JSON.stringify(partida);
         }
     }
