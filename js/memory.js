@@ -58,9 +58,9 @@ export var game = function(){
     }
     return {
         init: function (call){
-            if (sessionStorage.load === "true" && localStorage.save) { // load game
+            if (sessionStorage.save) { // load game
                 alert("Loading Game");
-                let partida = JSON.parse(localStorage.save);
+                let partida = JSON.parse(sessionStorage.save);
                 pairs = partida.pairs;
                 points = partida.points;
                 partida.cards.map(item => {
@@ -92,7 +92,6 @@ export var game = function(){
             }
         },
         click: function (card){
-            alert(card.clickable)
             if (!card.clickable) return;
             card.goFront();
             if (lastCard){ 
@@ -125,12 +124,12 @@ export var game = function(){
         },
         save: function (){
             var partida= {
+                uuid: localStorage.uuid,
                 pairs: pairs,
                 points: points,
                 cards: []
             };
             cards.forEach(c=>{
-                console.log("Saving card isDone:", c.isDone)
                 partida.cards.push({
                     current: c.current,
                     front: c.front,
@@ -138,7 +137,23 @@ export var game = function(){
                     waiting: c.waiting
                 });
             });
-            localStorage.save = JSON.stringify(partida);
+            let json_partida = JSON.stringify(partida);
+            fetch("../php/save.php",{
+                method : "POST",
+                body: json_partida,
+                headers:{"content-type":"application/json;chatset=UFT-8"}
+            })
+            .then(response=>response.json())
+            .then(json=> {
+                console.log(json);
+            })
+            .catch(err=>{
+                console.log(err);
+                localStorage.save = json_partida;
+            })
+            .finally(()=>{
+                window.location.replace("../");
+            });
         }
     }
 }();

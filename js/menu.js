@@ -9,8 +9,18 @@ $(document).ready(function() {
     });
 
     $('#saves').click(function() {
-        sessionStorage.load = true;
-        window.location.assign("./html/game.html");
+        fetch(".php/load.php",{
+            method: "POST",
+            body: "",
+            headers: {"content-type":"application/json; charset=UTF-8"}
+        })
+        .then(response=>{
+            if(response.ok) response.text();
+            else throw("PHP connection fail");
+        })
+        .then(partida=>sessionStorage.save = partida)
+        .catch(err=>sessionStorage.save = localStorage.save)
+        .finally(()=>window.location.assign("./html/game.html"))
     });
 
     $('#exit').click(function() {
