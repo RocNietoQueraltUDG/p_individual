@@ -59,7 +59,6 @@ export var game = function(){
     return {
         init: function (call){
             if (sessionStorage.save) { // load game
-                alert("Loading Game");
                 let partida = JSON.parse(sessionStorage.save);
                 pairs = partida.pairs;
                 points = partida.points;
@@ -79,7 +78,6 @@ export var game = function(){
                 });
                 return cards;
             } else { // new game
-                alert("New Game");
                 return mix().map(item => {
                     let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
                     carta.exposureTime = exposureTime; 

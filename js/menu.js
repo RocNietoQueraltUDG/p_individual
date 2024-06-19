@@ -3,6 +3,11 @@ $(document).ready(function() {
         sessionStorage.load = false;
         window.location.assign("./html/game.html");
     });
+    $('#adventure').click(function() {
+        sessionStorage.load = false;
+        window.location.assign("./html/gameA.html");
+    });
+
 
     $('#options').click(function() {
         window.location.assign("./html/options.html");
