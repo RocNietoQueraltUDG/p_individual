@@ -41,11 +41,11 @@ export var gameA = function() {
         } else if (level === 3) {
             options = { pairs: 4, difficulty: 'normal' };
         } else if (level === 4) {
-            options = { pairs: 6, difficulty: 'normal' };
+            options = { pairs: 5, difficulty: 'normal' };
         } else if (level === 5) {
-            options = { pairs: 8, difficulty: 'hard' };
+            options = { pairs: 6, difficulty: 'hard' };
         } else if (level === 6) {
-            options = { pairs: 12, difficulty: 'hard' };
+            options = { pairs: 6, difficulty: 'hard' };
         }
     }
 

@@ -56,6 +56,10 @@ export var game = function(){
         items = items.concat(items);
         return items;
     }
+    function resetOptions() {
+        options = { level: 1, pairs: 2, difficulty: 'easy', points: 100 };
+        localStorage.setItem('options', JSON.stringify(options));
+    }
     return {
         init: function (call){
             if (sessionStorage.save) { // load game
@@ -97,6 +101,7 @@ export var game = function(){
                     pairs--;
                     if (pairs <= 0){
                         alert("Has guanyat amb " + points + " punts!");
+                        resetOptions()
                         window.location.replace("../");
                     }
                     points += pointsEarned; 
@@ -109,6 +114,7 @@ export var game = function(){
                     points -= pointsLost; 
                     if (points <= 0){
                         alert ("Has perdut");
+                        resetOptions()
                         window.location.replace("../");
                     }
                     lastCard = null;
