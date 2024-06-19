@@ -1,0 +1,25 @@
+#title, .center{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	
+}
+
+button.center{
+	width: 13rem;
+	height: 6rem;
+	margin-top: 1rem;
+	background-color:lightblue;
+	text-align: center;
+	font-size: 30px;
+	color:dodgerblue;
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#title{
+	color: red;
+	text-align: center;
+	font-size: 90px;
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	font-weight: 1000;
+}

@@ -1,14 +1,9 @@
 $(document).ready(function() {
     $('#play').click(function() {
         sessionStorage.load = false;
-        window.location.assign("./html/game.html");
+        window.location.assign("./html/mode.html");
     });
-    $('#adventure').click(function() {
-        sessionStorage.load = false;
-        window.location.assign("./html/gameA.html");
-    });
-
-
+    
     $('#options').click(function() {
         window.location.assign("./html/options.html");
     });
