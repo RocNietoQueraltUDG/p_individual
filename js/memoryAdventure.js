@@ -30,7 +30,7 @@ export var gameA = function() {
 
     var lastCard;
     var options = JSON.parse(localStorage.getItem('options')) || {};
-    var optionsM2= JSON.parse(localStorage.getItem('optionsM2')) || {};
+    var optionsM2 = JSON.parse(localStorage.getItem('optionsM2')) || {};
     var level = options.level || 1; // Start from level 1 if not set
 
     // Set options based on the level
