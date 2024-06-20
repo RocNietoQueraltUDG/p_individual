@@ -1,3 +1,5 @@
+/* mode.css */
+
 #title, .center{
 	display: block;
 	margin-left: auto;
@@ -10,6 +12,7 @@ button.center{
 	height: 6rem;
 	margin-top: 1rem;
 	background-color:lightblue;
+	border-radius: 10px;
 	text-align: center;
 	font-size: 30px;
 	color:dodgerblue;

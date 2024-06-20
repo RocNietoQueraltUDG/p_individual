@@ -22,6 +22,9 @@ $(document).ready(function() {
         .catch(err=>sessionStorage.save = localStorage.save)
         .finally(()=>window.location.assign("./html/game.html"))
     });
+    $('#score').click(function() {
+        window.location.assign("./html/score.html");
+    });
 
     $('#exit').click(function() {
         console.warn("No es pot sortir!");

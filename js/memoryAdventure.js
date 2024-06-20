@@ -56,6 +56,16 @@ export var gameA = function() {
 
     setOptionsForLevel(level);
 
+    function updateScoreboard(name, points) {
+        const scoreboard = JSON.parse(localStorage.getItem('scoreboard')) || [];
+        scoreboard.push({ name, points });
+        localStorage.setItem('scoreboard', JSON.stringify(scoreboard));
+    }
+    
+    function resetScoreboard() {
+        localStorage.removeItem('scoreboard');
+    }
+    
     var pairs = options.pairs || 2;
     var points = options.points || 100;
     var difficultySettings = {
@@ -99,9 +109,11 @@ export var gameA = function() {
                         level++;
                         if (level > 6) { // If there are no more levels
                             alert("Has completat tots els nivells amb " + points + " punts!");
+                            const playerName = prompt("Introdueix el teu nom:");
+                            updateScoreboard(playerName, points);
                             resetOptions();
                             window.location.replace("../"); // Go to the menu
-                        } else {
+                        }  else {
                             setOptionsForLevel(level);
                             options.level = level;
                             options.points = points;
