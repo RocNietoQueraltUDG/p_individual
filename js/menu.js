@@ -5,7 +5,7 @@ $(document).ready(function() {
     });
     
     $('#options').click(function() {
-        window.location.assign("./html/options.html");
+        window.location.assign("./html/optionsM2.html");
     });
 
     $('#saves').click(function() {

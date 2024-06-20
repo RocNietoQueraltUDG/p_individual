@@ -30,22 +30,54 @@ export var gameA = function() {
 
     var lastCard;
     var options = JSON.parse(localStorage.getItem('options')) || {};
+    var optionsM2= JSON.parse(localStorage.getItem('optionsM2')) || {};
     var level = options.level || 1; // Start from level 1 if not set
 
     // Set options based on the level
+    
     function setOptionsForLevel(level) {
-        if (level === 1) {
-            options = { pairs: 2, difficulty: 'easy' };
-        } else if (level === 2) {
-            options = { pairs: 3, difficulty: 'easy' };
-        } else if (level === 3) {
-            options = { pairs: 4, difficulty: 'normal' };
-        } else if (level === 4) {
-            options = { pairs: 5, difficulty: 'normal' };
-        } else if (level === 5) {
-            options = { pairs: 6, difficulty: 'hard' };
-        } else if (level === 6) {
-            options = { pairs: 6, difficulty: 'hard' };
+        if (optionsM2.difficulty == "easy"){
+            if (level === 1) {
+                options = { pairs: 2, difficulty: 'easy' };
+            } else if (level === 2) {
+                options = { pairs: 3, difficulty: 'easy' };
+            } else if (level === 3) {
+                options = { pairs: 4, difficulty: 'normal' };
+            } else if (level === 4) {
+                options = { pairs: 5, difficulty: 'normal' };
+            } else if (level === 5) {
+                options = { pairs: 6, difficulty: 'normal' };
+            } else if (level === 6) {
+                options = { pairs: 6, difficulty: 'hard' };
+            }
+        }else if (optionsM2.difficulty == "normal"){
+            if (level === 1) {
+                options = { pairs: 2, difficulty: 'normal' };
+            } else if (level === 2) {
+                options = { pairs: 3, difficulty: 'normal' };
+            } else if (level === 3) {
+                options = { pairs: 4, difficulty: 'normal' };
+            } else if (level === 4) {
+                options = { pairs: 5, difficulty: 'normal' };
+            } else if (level === 5) {
+                options = { pairs: 6, difficulty: 'hard' };
+            } else if (level === 6) {
+                options = { pairs: 6, difficulty: 'hard' };
+            }
+        }else if (optionsM2.difficulty == "hard"){
+            if (level === 1) {
+                options = { pairs: 2, difficulty: 'hard' };
+            } else if (level === 2) {
+                options = { pairs: 3, difficulty: 'hard' };
+            } else if (level === 3) {
+                options = { pairs: 4, difficulty: 'hard' };
+            } else if (level === 4) {
+                options = { pairs: 5, difficulty: 'hard' };
+            } else if (level === 5) {
+                options = { pairs: 6, difficulty: 'hard' };
+            } else if (level === 6) {
+                options = { pairs: 6, difficulty: 'hard' };
+            }
         }
     }
 
