@@ -43,5 +43,6 @@ $('#default').on('click',function(){
 
 $('#apply').on('click',function(){
     options.applyChanges();
-    location.assign("../");
+    sessionStorage.removeItem("save");
+    location.assign("../html/game.html");
 });

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#play').click(function() {
-        sessionStorage.load = false;
+        sessionStorage.removeItem("save");
         window.location.assign("./html/mode.html");
     });
     

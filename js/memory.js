@@ -54,7 +54,7 @@ export var game = function(){
         items.sort(() => Math.random() - 0.5); 
         items = items.slice(0, pairs); 
         items = items.concat(items);
-        return items;
+        return items.sort(() => Math.random() - 0.5); // Aleatòria
     }
     function resetOptions() {
         options = { level: 1, pairs: 2, difficulty: 'easy', points: 100 };
@@ -82,6 +82,7 @@ export var game = function(){
                 });
                 return cards;
             } else { // new game
+                alert("New Game")
                 return mix().map(item => {
                     let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
                     carta.exposureTime = exposureTime; 

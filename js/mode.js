@@ -1,10 +1,10 @@
 $(document).ready(function() {
     $('#play').click(function() {
-        sessionStorage.load = false;
-        window.location.assign("./game.html");
+        sessionStorage= false;
+        window.location.assign("./options.html");
     });
     $('#adventure').click(function() {
-        sessionStorage.load = false;
+        sessionStorage= false;
         window.location.assign("./gameA.html");
     });
 });
