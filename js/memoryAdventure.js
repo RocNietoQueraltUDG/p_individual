@@ -69,9 +69,9 @@ export var gameA = function() {
     var pairs = options.pairs || 2;
     var points = options.points || 100;
     var difficultySettings = {
-        easy: { exposureTime: 2000, pointsEarned: 50, pointsLost: 5 },
-        normal: { exposureTime: 1000, pointsEarned: 100, pointsLost: 10 },
-        hard: { exposureTime: 500, pointsEarned: 150, pointsLost: 25 }
+        easy: { exposureTime: 2000, pointsEarned: 50, pointsLost: 10 },
+        normal: { exposureTime: 1000, pointsEarned: 100, pointsLost: 15 },
+        hard: { exposureTime: 500, pointsEarned: 150, pointsLost: 30 }
     };
     var difficulty = options.difficulty || 'normal';
     var { exposureTime, pointsEarned, pointsLost } = difficultySettings[difficulty];
@@ -116,7 +116,7 @@ export var gameA = function() {
                         }  else {
                             setOptionsForLevel(level);
                             options.level = level;
-                            options.points = points;
+                            options.points = points+50;
                             localStorage.setItem('options', JSON.stringify(options));
                             window.location.reload(); // Reload the page with new level options
                         }
