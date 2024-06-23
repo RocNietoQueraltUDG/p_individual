@@ -1,22 +1,21 @@
-export var gameA = function() {
-    const back = '../resources/back.png';
-    const resources = [
-        '../resources/cb.png', '../resources/co.png',
-        '../resources/sb.png', '../resources/so.png',
-        '../resources/tb.png', '../resources/to.png'
-    ];
-    const card = {
+export var gameA = (function() {
+    const back = 'back';
+    const resources = ['cb', 'co', 'sb', 'so', 'tb', 'to'];
+    const cardTemplate = {
         current: back,
+        front: null,
         clickable: true,
         isDone: false,
+        callback: null,
         goBack: function() {
             setTimeout(() => {
                 this.current = back;
                 this.clickable = true;
-                this.callback();
+                if (this.callback) this.callback();
             }, this.exposureTime);
         },
-        goFront: function() {
+        goFront: function(last) {
+            if (last) last.waiting = false;
             this.current = this.front;
             this.clickable = false;
             this.callback();
@@ -34,51 +33,69 @@ export var gameA = function() {
     var level = options.level || 1; // Start from level 1 if not set
 
     // Set options based on the level
-    
     function setOptionsForLevel(level) {
-        if (optionsM2.difficulty == "easy"){
+        if (optionsM2.difficulty == "easy") {
             if (level === 1) {
-                options = { pairs: 2, difficulty: 'easy' };
+                options.pairs = 2;
+                options.difficulty = 'easy';
             } else if (level === 2) {
-                options = { pairs: 3, difficulty: 'easy' };
+                options.pairs = 3;
+                options.difficulty = 'easy';
             } else if (level === 3) {
-                options = { pairs: 4, difficulty: 'normal' };
+                options.pairs = 4;
+                options.difficulty = 'normal';
             } else if (level === 4) {
-                options = { pairs: 5, difficulty: 'normal' };
+                options.pairs = 5;
+                options.difficulty = 'normal';
             } else if (level === 5) {
-                options = { pairs: 6, difficulty: 'normal' };
+                options.pairs = 6;
+                options.difficulty = 'normal';
             } else if (level === 6) {
-                options = { pairs: 6, difficulty: 'hard' };
+                options.pairs = 6;
+                options.difficulty = 'hard';
             }
-        }else if (optionsM2.difficulty == "normal"){
+        } else if (optionsM2.difficulty == "normal") {
             if (level === 1) {
-                options = { pairs: 2, difficulty: 'normal' };
+                options.pairs = 2;
+                options.difficulty = 'normal';
             } else if (level === 2) {
-                options = { pairs: 3, difficulty: 'normal' };
+                options.pairs = 3;
+                options.difficulty = 'normal';
             } else if (level === 3) {
-                options = { pairs: 4, difficulty: 'normal' };
+                options.pairs = 4;
+                options.difficulty = 'normal';
             } else if (level === 4) {
-                options = { pairs: 5, difficulty: 'normal' };
+                options.pairs = 5;
+                options.difficulty = 'normal';
             } else if (level === 5) {
-                options = { pairs: 6, difficulty: 'hard' };
+                options.pairs = 6;
+                options.difficulty = 'hard';
             } else if (level === 6) {
-                options = { pairs: 6, difficulty: 'hard' };
+                options.pairs = 6;
+                options.difficulty = 'hard';
             }
-        }else if (optionsM2.difficulty == "hard"){
+        } else if (optionsM2.difficulty == "hard") {
             if (level === 1) {
-                options = { pairs: 2, difficulty: 'hard' };
+                options.pairs = 2;
+                options.difficulty = 'hard';
             } else if (level === 2) {
-                options = { pairs: 3, difficulty: 'hard' };
+                options.pairs = 3;
+                options.difficulty = 'hard';
             } else if (level === 3) {
-                options = { pairs: 4, difficulty: 'hard' };
+                options.pairs = 4;
+                options.difficulty = 'hard';
             } else if (level === 4) {
-                options = { pairs: 5, difficulty: 'hard' };
+                options.pairs = 5;
+                options.difficulty = 'hard';
             } else if (level === 5) {
-                options = { pairs: 6, difficulty: 'hard' };
+                options.pairs = 6;
+                options.difficulty = 'hard';
             } else if (level === 6) {
-                options = { pairs: 6, difficulty: 'hard' };
+                options.pairs = 6;
+                options.difficulty = 'hard';
             }
         }
+        localStorage.setItem('options', JSON.stringify(options));
     }
 
     function resetOptions() {
@@ -86,18 +103,23 @@ export var gameA = function() {
         localStorage.setItem('options', JSON.stringify(options));
     }
 
-    setOptionsForLevel(level);
-
     function updateScoreboard(name, points) {
         const scoreboard = JSON.parse(localStorage.getItem('scoreboard')) || [];
         scoreboard.push({ name, points });
         localStorage.setItem('scoreboard', JSON.stringify(scoreboard));
     }
     
-    function resetScoreboard() {
-        localStorage.removeItem('scoreboard');
+    function mixResources() {
+        var items = resources.slice();
+        items.sort(() => Math.random() - 0.5);
+        items = items.slice(0, options.pairs);
+        items = items.concat(items);
+        items.sort(() => Math.random() - 0.5);
+        return items;
     }
-    
+    alert(level)
+    setOptionsForLevel(level);
+    alert(options.pairs)
     var pairs = options.pairs || 2;
     var points = options.points || 100;
     var difficultySettings = {
@@ -111,34 +133,40 @@ export var gameA = function() {
     var cards = [];
 
     return {
-        init: function(call) {
-            var items = resources.slice();
-            items.sort(() => Math.random() - 0.5);
-            items = items.slice(0, pairs);
-            items = items.concat(items);
-            items.sort(() => Math.random() - 0.5);
+        init: function(callback) {
+            setOptionsForLevel(level); // Ensure options are set for the current level
+            alert(`Number of pairs: ${options.pairs}`); // Show alert with the number of pairs
 
-            card.exposureTime = exposureTime;
-
+            var items = mixResources();
             cards = items.map(item => {
-                let carta = Object.create(card, { front: { value: item }, callback: { value: call } });
-                carta.current = carta.front;
-                carta.clickable = false;
-                carta.goBack();
+                let carta = Object.create(cardTemplate, {
+                    front: { value: item },
+                    callback: { value: callback },
+                    exposureTime: { value: exposureTime }
+                });
+                carta.current = carta.front; // Set current state to front initially
+                carta.clickable = false; // Cards are not clickable initially
+
+                setTimeout(() => {
+                    carta.goBack(); 
+                });
+
                 return carta;
             });
-
             return cards;
         },
         click: function(card) {
             if (!card.clickable) return;
-            card.goFront();
+            card.goFront(lastCard);
             if (lastCard) {
                 if (card.front === lastCard.front) {
                     pairs--;
                     if (pairs <= 0) {
                         alert("Has superat el nivell " + level);
                         level++;
+                        if (options.pairs !=6){
+                            options.pairs ++
+                        }
                         if (level > 6) { // If there are no more levels
                             alert("Has completat tots els nivells amb " + points + " punts!");
                             const playerName = prompt("Introdueix el teu nom:");
@@ -148,7 +176,7 @@ export var gameA = function() {
                         }  else {
                             setOptionsForLevel(level);
                             options.level = level;
-                            options.points = points+50;
+                            options.points = points + 50;
                             localStorage.setItem('options', JSON.stringify(options));
                             window.location.reload(); // Reload the page with new level options
                         }
@@ -158,7 +186,8 @@ export var gameA = function() {
                     lastCard.isDone = true;
                     lastCard = null;
                 } else {
-                    [card, lastCard].forEach(c => c.goBack());
+                    card.goBack();
+                    lastCard.goBack();
                     points -= pointsLost;
                     if (points <= 0) {
                         alert("Has perdut");
@@ -179,4 +208,4 @@ export var gameA = function() {
             lastCard = null;
         }
     }
-}();
+})();

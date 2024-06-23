@@ -1,29 +1,10 @@
-/* import { gameA as gController } from "./memoryAdventure.js";
-
-var gameA = $('#gameA');
-
-$('#save').on('click', ()=> {
-    gController.save();
-    alert("Game Saved");
-});
-
-gController.init(updateSRC).forEach(function(card, indx){
-    gameA.append('<img id="c'+indx+'" class="card" title="card">');
-    card.pointer = $('#c'+indx);
-    card.pointer.on('click', () => gController.click(card));
-    card.pointer.attr("src", card.current);
-});
-
-function updateSRC(){
-    this.pointer.attr("src", this.current);
-} */
 import { gameA } from './memoryAdventure.js';
 
-const configA = {
+const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 400,
-    parent: 'game', // Ensure the game canvas is added to the correct element
+    parent: 'gameA', // Ensure the game canvas is added to the correct element
     scene: {
         preload: preload,
         create: create,
@@ -31,7 +12,7 @@ const configA = {
     }
 };
 
-const phaserGame = new Phaser.Game(configA);
+const phaserGame = new Phaser.Game(config);
 
 function preload() {
     this.load.image('back', '../resources/back.png');
@@ -81,7 +62,7 @@ function create() {
     });
 
     this.input.on('gameobjectdown', (pointer, gameObject) => {
-        game.click(gameObject.cardData);
+        gameA.click(gameObject.cardData);
     });
 }
 
@@ -96,8 +77,3 @@ function cardClicked() {
         sprite.setTexture(sprite.cardData.current);
     });
 }
-
-document.getElementById('save').addEventListener('click', () => {
-    gameA.save();
-    alert('Game saved');
-});

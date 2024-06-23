@@ -3,9 +3,9 @@ export var game = (function() {
     const resources = ['cb', 'co', 'sb', 'so', 'tb', 'to'];
     const cardTemplate = {
         current: back,
+        front: null,
         clickable: true,
         isDone: false,
-        exposureTime: 1000,
         callback: null,
         goBack: function() {
             setTimeout(() => {
@@ -63,11 +63,18 @@ export var game = (function() {
                     callback: { value: callback },
                     exposureTime: { value: exposureTime }
                 });
-                carta.goBack();
+                carta.current = carta.front; // Set current state to front initially
+                carta.clickable = false; // Cards are not clickable initially
+
+                setTimeout(() => {
+                    carta.goBack(); 
+                });
+
                 return carta;
             });
             return cards;
         },
+
         click: function(card) {
             if (!card.clickable) return;
             card.goFront(lastCard);
@@ -75,7 +82,7 @@ export var game = (function() {
                 if (card.front === lastCard.front) {
                     options.pairs--;
                     if (options.pairs <= 0) {
-                        alert(`You won with ${options.points} points!`);
+                        alert(`Has guanyat amb ${options.points} punts!`);
                         resetOptions();
                         window.location.replace("../");
                     }
@@ -98,6 +105,7 @@ export var game = (function() {
                 lastCard = card;
             }
         },
+
         save: function() {
             var saveData = {
                 uuid: localStorage.uuid,

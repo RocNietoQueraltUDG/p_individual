@@ -43,6 +43,7 @@ function create() {
     if (cards.length >= 6) {
         offsetX = (this.sys.game.config.width - totalWidth)/1.25;
         offsetY = (this.sys.game.config.height - totalHeight) ;
+        
     } else {
         offsetX = (this.sys.game.config.width - totalWidth/2) / 2;
         offsetY = (this.sys.game.config.height - totalHeight/2) / 2;
