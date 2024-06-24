@@ -14,7 +14,7 @@ var optionsM2 = JSON.parse(localStorage.optionsM2 || JSON.stringify(default_opti
 
     return {
         applyChanges: function(){
-            localStorage.setItem('options', JSON.stringify(optionsM2)); // Canvia localStorage.options per localStorage.setItem('options', ...)
+            localStorage.setItem('optionsM2', JSON.stringify(optionsM2)); // Canvia localStorage.options per localStorage.setItem('options', ...)
         },
         defaultValues: function(){
             optionsM2.difficulty = default_optionsM2.difficulty;

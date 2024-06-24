@@ -31,72 +31,92 @@ export var gameA = (function() {
     var options = JSON.parse(localStorage.getItem('options')) || {};
     var optionsM2 = JSON.parse(localStorage.getItem('optionsM2')) || {};
     var level = options.level || 1; // Start from level 1 if not set
-
+    var difficultyM2 = optionsM2.difficulty || "easy";
     // Set options based on the level
     function setOptionsForLevel(level) {
-        if (optionsM2.difficulty == "easy"){
-            if (level === 1) {
-                options = { pairs: 2, difficulty: 'easy' };
-
-            } else if (level === 2) {
-                options = { pairs: 3, difficulty: 'easy' };
-
-            } else if (level === 3) {
-                options = { pairs: 4, difficulty: 'normal' };
-
-            } else if (level === 4) {
-                options = { pairs: 5, difficulty: 'normal' };
-
-            } else if (level === 5) {
-                options = { pairs: 6, difficulty: 'normal' };
-
-            } else if (level === 6) {
-                options = { pairs: 6, difficulty: 'hard' };
-
-            }
-        }else if (optionsM2.difficulty == "normal"){
-            if (level === 1) {
-                options = { pairs: 2, difficulty: 'normal' };
-
-            } else if (level === 2) {
-                options = { pairs: 3, difficulty: 'normal' };
-
-            } else if (level === 3) {
-                options = { pairs: 4, difficulty: 'normal' };
-
-            } else if (level === 4) {
-                options = { pairs: 5, difficulty: 'normal' };
-
-            } else if (level === 5) {
-                options = { pairs: 6, difficulty: 'hard' };
-
-            } else if (level === 6) {
-                options = { pairs: 6, difficulty: 'hard' };
-
-            }
-        }else if (optionsM2.difficulty == "hard"){
+        if (difficultyM2 == "hard"){
             if (level === 1) {
                 options = { pairs: 2, difficulty: 'hard' };
+                
 
             } else if (level === 2) {
                 options = { pairs: 3, difficulty: 'hard' };
+                
 
             } else if (level === 3) {
                 options = { pairs: 4, difficulty: 'hard' };
+                
 
             } else if (level === 4) {
                 options = { pairs: 5, difficulty: 'hard' };
+                
 
             } else if (level === 5) {
                 options = { pairs: 6, difficulty: 'hard' };
+                
 
             } else if (level === 6) {
                 options = { pairs: 6, difficulty: 'hard' };
+                
+
+            }
+        }else if (difficultyM2 == "normal"){
+            if (level === 1) {
+                options = { pairs: 2, difficulty: 'normal' };
+                
+
+            } else if (level === 2) {
+                options = { pairs: 3, difficulty: 'normal' };
+                
+
+            } else if (level === 3) {
+                options = { pairs: 4, difficulty: 'normal' };
+                
+
+            } else if (level === 4) {
+                options = { pairs: 5, difficulty: 'normal' };
+                
+
+            } else if (level === 5) {
+                options = { pairs: 6, difficulty: 'hard' };
+                
+
+            } else if (level === 6) {
+                options = { pairs: 6, difficulty: 'hard' };
+                
+
+            }
+        }else{
+            
+            if (level === 1) {
+                options = { pairs: 2, difficulty: 'easy' };
+                
+
+            } else if (level === 2) {
+                options = { pairs: 3, difficulty: 'easy' };
+                
+
+            } else if (level === 3) {
+                options = { pairs: 4, difficulty: 'normal' };
+                
+
+            } else if (level === 4) {
+                options = { pairs: 5, difficulty: 'normal' };
+                
+
+            } else if (level === 5) {
+                options = { pairs: 6, difficulty: 'normal' };
+                
+
+            } else if (level === 6) {
+                options = { pairs: 6, difficulty: 'hard' };
+                
 
             }
         }
-
+        localStorage.setItem('options', JSON.stringify(options))
     }
+    
     function resetOptions() {
         options = { level: 1, pairs: 2, difficulty: 'easy', points: 100 };
         localStorage.setItem('options', JSON.stringify(options));
@@ -116,9 +136,7 @@ export var gameA = (function() {
         items.sort(() => Math.random() - 0.5);
         return items;
     }
-    alert(level)
-    setOptionsForLevel(level);
-    alert(options.pairs)
+
     var pairs = options.pairs || 2;
     var points = options.points || 100;
     var difficultySettings = {
@@ -134,8 +152,6 @@ export var gameA = (function() {
     return {
         init: function(callback) {
             setOptionsForLevel(level); // Ensure options are set for the current level
-            alert(`Number of pairs: ${options.pairs}`); // Show alert with the number of pairs
-
             var items = mixResources();
             cards = items.map(item => {
                 let carta = Object.create(cardTemplate, {
@@ -163,9 +179,9 @@ export var gameA = (function() {
                     if (pairs <= 0) {
                         alert("Has superat el nivell " + level);
                         level++;
-                        if (options.pairs !=6){
+                        /* if (options.pairs !=6){
                             options.pairs ++
-                        }
+                        } */
                         if (level > 6) { // If there are no more levels
                             alert("Has completat tots els nivells amb " + points + " punts!");
                             const playerName = prompt("Introdueix el teu nom:");
