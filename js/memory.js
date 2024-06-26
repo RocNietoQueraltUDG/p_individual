@@ -82,7 +82,7 @@ export var game = (function() {
                 if (card.front === lastCard.front) {
                     options.pairs--;
                     if (options.pairs <= 0) {
-                        alert("Has guanyat amb"+options.points+"punts!");
+                        alert("Has guanyat amb "+options.points+" punts!");
                         resetOptions();
                         window.location.replace("../");
                     }
