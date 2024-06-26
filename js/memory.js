@@ -81,9 +81,7 @@ export var game = (function() {
             if (lastCard) {
                 if (card.front === lastCard.front) {
                     options.pairs--;
-                    alert(options.pairs)
                     if (options.pairs <= 0) {
-                        alert("igual a 0")
                         alert("Has guanyat amb"+options.points+"punts!");
                         resetOptions();
                         window.location.replace("../");
